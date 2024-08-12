@@ -3,9 +3,9 @@
 namespace Dynamic\Elements\CTA\Elements;
 
 use DNADesign\Elemental\Models\ElementContent;
-use SilverStripe\LinkField\JsonData;
-use SilverStripe\LinkField\ORM\DBLink;
-use SilverStripe\LinkField\Type\Registry;
+use SilverStripe\Forms\FieldList;
+use SilverStripe\LinkField\Form\LinkField;
+use SilverStripe\LinkField\Models\Link;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -33,9 +33,26 @@ class ElementCallToAction extends ElementContent
     /**
      * @var array|string[]
      */
-    private static array $db = [
-        'CtaLink' => DBLink::class,
+    private static array $has_one = [
+        'CtaLink' => Link::class,
     ];
+
+    /**
+     * @return FieldList
+     */
+    public function getCMSFields(): FieldList
+    {
+        $this->beforeUpdateCMSFields(function (FieldList $fields) {
+            $fields->replaceField(
+                'CtaLinkID',
+                $link = LinkField::create('CtaLink')
+                    ->setTitle('CTA Link')
+            );
+        });
+
+        return parent::getCMSFields();
+        ;
+    }
 
     /**
      * @return string
@@ -51,25 +68,5 @@ class ElementCallToAction extends ElementContent
     public function getType(): string
     {
         return _t(__CLASS__ . '.BlockType', 'Call To Action');
-    }
-
-    /**
-     * @return JsonData|null
-     */
-    public function getLinkObject(): ?JsonData
-    {
-        $link = $this->dbObject('CtaLink');
-
-        $value = $link->getValue();
-
-        if ($value) {
-            $type = Registry::singleton()->byKey($value['typeKey']);
-
-            if ($type) {
-                return $type->loadLinkData($value);
-            }
-        }
-
-        return null;
     }
 }
