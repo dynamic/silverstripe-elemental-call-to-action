@@ -19,11 +19,11 @@
     ],
     "require": {
         "dnadesign/silverstripe-elemental": "^5",
-        "silverstripe/linkfield": "^3.0",
-        "silverstripe/recipe-cms": "^5.0"
+        "silverstripe/linkfield": "^4.0"
     },
     "require-dev": {
-        "silverstripe/recipe-testing": "^3"
+        "silverstripe/recipe-testing": "^3",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
