@@ -6,7 +6,7 @@ use DNADesign\Elemental\Models\ElementContent;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\LinkField\Form\LinkField;
 use SilverStripe\LinkField\Models\Link;
-use SilverStripe\ORM\FieldType\DBField;
+use SilverStripe\ORM\FieldType\DBHTMLText;
 
 /**
  * Class \Dynamic\Elements\CTA\Elements\ElementCallToAction
@@ -38,6 +38,13 @@ class ElementCallToAction extends ElementContent
     ];
 
     /**
+     * @var array|string[]
+     */
+    private static array $owns = [
+        'CtaLink',
+    ];
+
+    /**
      * @return FieldList
      */
     public function getCMSFields(): FieldList
@@ -45,13 +52,12 @@ class ElementCallToAction extends ElementContent
         $this->beforeUpdateCMSFields(function (FieldList $fields) {
             $fields->replaceField(
                 'CtaLinkID',
-                $link = LinkField::create('CtaLink')
+                LinkField::create('CtaLink')
                     ->setTitle('CTA Link')
             );
         });
 
         return parent::getCMSFields();
-        ;
     }
 
     /**
@@ -59,7 +65,7 @@ class ElementCallToAction extends ElementContent
      */
     public function getSummary(): string
     {
-        return DBField::create_field('HTMLText', $this->HTML)->Summary(20);
+        return DBHTMLText::create_field('HTMLText', $this->HTML)->Summary(20);
     }
 
     /**
