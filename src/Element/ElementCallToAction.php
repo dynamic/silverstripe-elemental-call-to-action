@@ -38,6 +38,13 @@ class ElementCallToAction extends ElementContent
     ];
 
     /**
+     * @var array
+     */
+    private static $owns = [
+        'CtaLink',
+    ];
+
+    /**
      * @return FieldList
      */
     public function getCMSFields(): FieldList
