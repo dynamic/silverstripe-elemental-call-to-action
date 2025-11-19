@@ -23,7 +23,7 @@
         "silverstripe/linkfield": "^5"
     },
     "require-dev": {
-        "silverstripe/recipe-testing": "^6",
+        "silverstripe/recipe-testing": "^4",
         "squizlabs/php_codesniffer": "^3.7"
     },
     "minimum-stability": "dev",
