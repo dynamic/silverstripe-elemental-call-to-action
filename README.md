@@ -3,17 +3,18 @@
 A call to action block for the Elemental block system
 
 [![CI](https://github.com/dynamic/silverstripe-elemental-call-to-action/actions/workflows/ci.yml/badge.svg)](https://github.com/dynamic/silverstripe-elemental-call-to-action/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/dynamic/silverstripe-elemental-call-to-action/branch/master/graph/badge.svg)](https://codecov.io/gh/dynamic/silverstripe-elemental-call-to-action)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/dynamic?label=Sponsors&logo=GitHub%20Sponsors&style=flat&color=ea4aaa)](https://github.com/sponsors/dynamic)
 
 [![Latest Stable Version](https://poser.pugx.org/dynamic/silverstripe-elemental-call-to-action/v/stable)](https://packagist.org/packages/dynamic/silverstripe-elemental-call-to-action)
 [![Total Downloads](https://poser.pugx.org/dynamic/silverstripe-elemental-call-to-action/downloads)](https://packagist.org/packages/dynamic/silverstripe-elemental-call-to-action)
-[![Latest Unstable Version](https://poser.pugx.org/dynamic/silverstripe-elemental-call-to-action/v/unstable)](https://packagist.org/packages/dynamic/silverstripe-elemental-call-to-action)
 [![License](https://poser.pugx.org/dynamic/silverstripe-elemental-call-to-action/license)](https://packagist.org/packages/dynamic/silverstripe-elemental-call-to-action)
 
 ## Requirements
 
-* dnadesign/silverstripe-elemental: ^5.0
-* silverstripe/linkfield: ^4
+* PHP: ^8.3
+* SilverStripe: ^6
+* dnadesign/silverstripe-elemental: ^6
+* silverstripe/linkfield: ^5
 
 ## Installation
 
@@ -24,6 +25,14 @@ composer require dynamic/silverstripe-elemental-call-to-action
 ## License
 
 See [License](LICENSE.md)
+
+## Features
+
+- **Call to Action Block**: Display prominent CTAs with title, description, and customizable link
+- **LinkField Integration**: Flexible linking to internal pages, external URLs, files, emails, and phone numbers
+- **Bootstrap 5 Templates**: Pre-styled templates based on Bootstrap 5 alert components
+- **Elemental Integration**: Seamlessly integrates with SilverStripe Elemental content blocks
+- **Content Inheritance**: Extends ElementContent for rich text editing capabilities
 
 ## Usage
 
@@ -40,6 +49,17 @@ See [Elemental modules by Dynamic](https://github.com/orgs/dynamic/repositories?
 ## Configuration
 
 See [SilverStripe Elemental Configuration](https://github.com/silverstripe/silverstripe-elemental#configuration)
+
+## Upgrading from version 2
+
+SilverStripe Elemental Call to Action v3.0 is compatible with SilverStripe 6. Key changes:
+
+- Updated to SilverStripe CMS 6
+- Requires PHP 8.3 or higher
+- Updated `dnadesign/silverstripe-elemental` from ^5 to ^6
+- Updated `silverstripe/linkfield` from ^4 to ^5
+
+See the [SilverStripe 6 Upgrade Guide](https://docs.silverstripe.org/en/6/) for more details.
 
 ## Maintainers
 
