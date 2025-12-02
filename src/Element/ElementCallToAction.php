@@ -68,4 +68,15 @@ class ElementCallToAction extends ElementContent
     {
         return DBField::create_field('HTMLText', $this->HTML)->Summary(20);
     }
+
+    /**
+     * Override getType() because ElementContent hardcodes 'Content'.
+     * Use singular_name() to allow extensibility while overriding parent behavior.
+     *
+     * @return string
+     */
+    public function getType(): string
+    {
+        return _t(__CLASS__ . '.BlockType', $this->singular_name());
+    }
 }
