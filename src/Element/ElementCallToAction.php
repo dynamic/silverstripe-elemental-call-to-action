@@ -23,7 +23,7 @@ class ElementCallToAction extends ElementContent
     /**
      * @var string
      */
-    private static string $plural_name = 'Call to Actions';
+    private static string $plural_name = 'Call to Action Blocks';
 
     /**
      * @var string
@@ -35,6 +35,13 @@ class ElementCallToAction extends ElementContent
      */
     private static array $has_one = [
         'CtaLink' => Link::class,
+    ];
+
+    /**
+     * @var array
+     */
+    private static $owns = [
+        'CtaLink',
     ];
 
     /**
@@ -63,10 +70,13 @@ class ElementCallToAction extends ElementContent
     }
 
     /**
+     * Override getType() because ElementContent hardcodes 'Content'.
+     * Use singular_name() to allow extensibility while overriding parent behavior.
+     *
      * @return string
      */
     public function getType(): string
     {
-        return _t(__CLASS__ . '.BlockType', 'Call To Action');
+        return _t(__CLASS__ . '.BlockType', $this->singular_name());
     }
 }
