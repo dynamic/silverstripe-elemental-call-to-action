@@ -23,7 +23,7 @@ class ElementCallToAction extends ElementContent
     /**
      * @var string
      */
-    private static string $plural_name = 'Call to Actions';
+    private static string $plural_name = 'Call to Action Blocks';
 
     /**
      * @var string
@@ -67,13 +67,5 @@ class ElementCallToAction extends ElementContent
     public function getSummary(): string
     {
         return DBField::create_field('HTMLText', $this->HTML)->Summary(20);
-    }
-
-    /**
-     * @return string
-     */
-    public function getType(): string
-    {
-        return _t(__CLASS__ . '.BlockType', 'Call To Action');
     }
 }
