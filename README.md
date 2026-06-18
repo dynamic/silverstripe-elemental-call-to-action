@@ -37,17 +37,6 @@ A block to display a call to action - Title, Description, and Link. The UX is me
 
 The default templates are based off [Bootstrap 5](https://getbootstrap.com/) classes/styling
 
-## Upgrading from version 2
-
-SilverStripe Elemental Call to Action v3.0 is compatible with SilverStripe 6. Key changes:
-
-- Updated to SilverStripe CMS 6
-- Requires PHP 8.3 or higher
-- Updated `dnadesign/silverstripe-elemental` from ^5 to ^6
-- Updated `silverstripe/linkfield` from ^4 to ^5
-
-See the [SilverStripe 6 Upgrade Guide](https://docs.silverstripe.org/en/6/) for more details.
-
 ## Configuration
 
 See [SilverStripe Elemental Configuration](https://github.com/silverstripe/silverstripe-elemental#configuration)
