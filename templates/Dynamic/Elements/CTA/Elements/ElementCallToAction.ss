@@ -8,9 +8,7 @@
                 <% end_if %>
                 <% if $CtaLink %>
                     <div class="d-grid gap-2 d-sm-flex justify-content-sm-center content-element_ctalink">
-                        <% with $CtaLink %>
-                            <a href="$URL" <% if $OpenInNew %>target="_blank" rel="noopener noreferrer"<% end_if %> class="btn btn-primary">$Title</a>
-                        <% end_with %>
+                        <a href="$CtaLink.URL" <% if $CtaLink.OpenInNew %>target="_blank" rel="noopener noreferrer"<% end_if %> class="btn btn-primary">$CtaLink.Title</a>
                     </div>
                 <% end_if %>
             </div>
