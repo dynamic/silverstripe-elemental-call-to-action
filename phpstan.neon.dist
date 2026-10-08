@@ -1,0 +1,15 @@
+parameters:
+  level: 4
+  treatPhpDocTypesAsCertain: false
+  reportUnmatchedIgnoredErrors: false
+  paths:
+    - src
+  ignoreErrors:
+    # DBField::create_field() is declared to return DBField, so PHPStan cannot see that
+    # an 'HTMLText' field is a DBHTMLText instance which does have Summary(). The same
+    # suppression is baselined in sibling modules (e.g. silverstripe-elemental-card).
+    -
+      message: '#^Call to an undefined method SilverStripe\\ORM\\FieldType\\DBField\:\:Summary\(\)\.$#'
+      identifier: method.notFound
+      count: 1
+      path: src/Element/ElementCallToAction.php

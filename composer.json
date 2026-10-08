@@ -23,6 +23,8 @@
         "silverstripe/linkfield": "^5"
     },
     "require-dev": {
+        "cambis/silverstan": "^2.1",
+        "phpstan/extension-installer": "^1.4",
         "silverstripe/recipe-testing": "^4",
         "squizlabs/php_codesniffer": "^3.7"
     },
@@ -37,6 +39,7 @@
     "config": {
         "allow-plugins": {
             "composer/installers": true,
+            "phpstan/extension-installer": true,
             "silverstripe/recipe-plugin": true,
             "silverstripe/vendor-plugin": true
         },
