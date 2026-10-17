@@ -45,6 +45,19 @@ class ElementCallToAction extends ElementContent
     ];
 
     /**
+     * Duplicate the linked Link record alongside the element, otherwise the duplicate copies
+     * the CtaLinkID foreign key and both elements edit (and $owns) the same Link row.
+     *
+     * No matching cascade_deletes is declared: duplicates created before this fix may already
+     * share Link rows, so deleting the Link of one of them would break the other.
+     *
+     * @var array
+     */
+    private static array $cascade_duplicates = [
+        'CtaLink',
+    ];
+
+    /**
      * @return FieldList
      */
     public function getCMSFields(): FieldList
