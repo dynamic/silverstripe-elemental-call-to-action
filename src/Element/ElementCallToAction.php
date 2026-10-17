@@ -82,7 +82,12 @@ class ElementCallToAction extends ElementContent
      */
     protected function onAfterDuplicate(DataObject $original, $doWrite, $relations): void
     {
-        $this->linkOwnerNeedsRepointing = (int)$this->CtaLinkID > 0;
+        // Only a Link that this duplication actually created may be re-pointed. A caller can ask
+        // duplicate() to skip relation copying (duplicate(true, [])), and then toMap() has merely
+        // copied the CtaLinkID column, so the clone shares the original's Link row and must not
+        // claim it.
+        $this->linkOwnerNeedsRepointing = (int)$this->CtaLinkID > 0
+            && (int)$this->CtaLinkID !== (int)$original->CtaLinkID;
         $this->repointDuplicatedLinkOwner();
     }
 

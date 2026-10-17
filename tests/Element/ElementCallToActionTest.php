@@ -153,6 +153,44 @@ class ElementCallToActionTest extends SapphireTest
     }
 
     /**
+     * A caller can ask duplicate() to skip relation copying, in which case the clone shares the
+     * original's Link row instead of getting one of its own. That shared row must keep the original
+     * block as its owner.
+     */
+    public function testDuplicateWithoutLinkRelationLeavesSharedLinkOwnerAlone(): void
+    {
+        $link = ExternalLink::create();
+        $link->ExternalUrl = 'https://example.com/shared';
+        $link->write();
+
+        $original = $this->objFromFixture(ElementCallToAction::class, 'one');
+        $original->CtaLinkID = $link->ID;
+        $original->write();
+        $link->OwnerID = $original->ID;
+        $link->OwnerClass = $original->ClassName;
+        $link->OwnerRelation = 'CtaLink';
+        $link->write();
+
+        $duplicate = $original->duplicate(true, []);
+
+        $this->assertSame(
+            (int)$original->CtaLinkID,
+            (int)$duplicate->CtaLinkID,
+            'Precondition: no Link was copied, so the duplicate shares the original\'s row.'
+        );
+        $this->assertSame(
+            (int)$original->ID,
+            (int)ExternalLink::get()->byID($link->ID)->OwnerID,
+            'A Link the duplicate did not create must keep the original block as its owner.'
+        );
+        $this->assertSame(
+            (int)$original->ID,
+            (int)$link->Owner()->ID,
+            'The original block must still resolve as the Link\'s owner.'
+        );
+    }
+
+    /**
      * Duplicating an element that has no link must not error and must not invent one.
      */
     public function testDuplicateWithoutCtaLink(): void
