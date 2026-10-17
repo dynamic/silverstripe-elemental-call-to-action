@@ -35,6 +35,18 @@ class ElementCallToActionTest extends SapphireTest
         $original->CtaLinkID = $link->ID;
         $original->write();
 
+        // Mirror what linkfield's own LinkField does once the owner record has an ID.
+        $link->OwnerID = $original->ID;
+        $link->OwnerClass = $original->ClassName;
+        $link->OwnerRelation = 'CtaLink';
+        $link->write();
+
+        $this->assertSame(
+            (int)$original->ID,
+            (int)$link->Owner()->ID,
+            'Precondition: the original Link resolves its owner.'
+        );
+
         $duplicate = $original->duplicate();
 
         $this->assertNotEquals(0, $original->CtaLinkID, 'Precondition: the original has a link.');
@@ -68,6 +80,27 @@ class ElementCallToActionTest extends SapphireTest
             'The duplicated Link must keep its link type instead of degrading to a plain Link.'
         );
 
+        $this->assertSame(
+            (int)$duplicate->ID,
+            (int)$duplicate->CtaLink()->OwnerID,
+            'The duplicated Link must be owned by the duplicated block, not by the original one.'
+        );
+        $this->assertNotNull(
+            $duplicate->CtaLink()->Owner(),
+            'The duplicated Link must still resolve its owner, so linkfield\'s permission checks '
+            . 'keep working off the owning block instead of falling back to canCreate().'
+        );
+        $this->assertSame(
+            (int)$duplicate->ID,
+            (int)$duplicate->CtaLink()->Owner()->ID,
+            'The duplicated Link\'s owner must be the duplicated block.'
+        );
+        $this->assertSame(
+            'CtaLink',
+            $duplicate->CtaLink()->OwnerRelation,
+            'The duplicated Link must record which relation points at it.'
+        );
+
         // The original Link row must still belong to the original element, i.e. the fix created a
         // new row rather than re-pointing the existing one at the duplicate.
         $this->assertSame(
@@ -77,6 +110,45 @@ class ElementCallToActionTest extends SapphireTest
         $this->assertSame(
             'https://example.com/cta',
             ExternalLink::get()->byID($link->ID)->ExternalUrl
+        );
+    }
+
+    /**
+     * DNADesign\Elemental\Models\ElementalArea duplicates a page's blocks with duplicate(false), so
+     * the block has no ID yet when the Link is copied. The Link must still be re-pointed at the
+     * block once the block itself is written.
+     */
+    public function testUnwrittenDuplicateRepointsLinkOwnerWhenWritten(): void
+    {
+        $link = ExternalLink::create();
+        $link->ExternalUrl = 'https://example.com/page-copy';
+        $link->write();
+
+        $original = $this->objFromFixture(ElementCallToAction::class, 'one');
+        $original->CtaLinkID = $link->ID;
+        $original->write();
+        $link->OwnerID = $original->ID;
+        $link->OwnerClass = $original->ClassName;
+        $link->OwnerRelation = 'CtaLink';
+        $link->write();
+
+        $duplicate = $original->duplicate(false);
+
+        $this->assertEquals(0, (int)$duplicate->ID, 'Precondition: the duplicate is still unwritten.');
+        $this->assertNotEquals(0, (int)$duplicate->CtaLinkID, 'Precondition: the Link was copied.');
+
+        $duplicate->write();
+
+        $this->assertNotEquals(0, (int)$duplicate->ID, 'Precondition: the duplicate is written.');
+        $this->assertSame(
+            (int)$duplicate->ID,
+            (int)$duplicate->CtaLink()->OwnerID,
+            'A Link copied by an unwritten duplicate must be re-pointed when the block is written.'
+        );
+        $this->assertSame(
+            (int)$link->ID,
+            (int)ElementCallToAction::get()->byID($original->ID)->CtaLinkID,
+            'The original block must keep its own Link.'
         );
     }
 

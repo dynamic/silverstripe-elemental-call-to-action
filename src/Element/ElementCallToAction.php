@@ -6,6 +6,7 @@ use DNADesign\Elemental\Models\ElementContent;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\LinkField\Form\LinkField;
 use SilverStripe\LinkField\Models\Link;
+use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\FieldType\DBField;
 
 /**
@@ -56,6 +57,78 @@ class ElementCallToAction extends ElementContent
     private static array $cascade_duplicates = [
         'CtaLink',
     ];
+
+    /**
+     * Whether the duplicated CtaLink record still has to be re-pointed at this record.
+     *
+     * @var bool
+     */
+    private bool $linkOwnerNeedsRepointing = false;
+
+    /**
+     * cascade_duplicates copies the Link row verbatim, and linkfield stores its owner in the
+     * Link itself (OwnerID / OwnerClass / OwnerRelation). The copy therefore still claims the
+     * original element as its owner, which makes Link::Owner() return null for it (the reciprocal
+     * has_one no longer matches), so linkfield's permission checks silently fall back to
+     * canCreate() and "used on" reports miss the duplicated block.
+     *
+     * The copy can only be re-pointed once this record has an ID, and duplicate(false) - the path
+     * DNADesign\Elemental\Models\ElementalArea uses when a page is duplicated - does not write it
+     * here, so the work is also retried from onAfterWrite().
+     *
+     * @param DataObject $original
+     * @param bool $doWrite
+     * @param array|null $relations
+     */
+    protected function onAfterDuplicate(DataObject $original, $doWrite, $relations): void
+    {
+        $this->linkOwnerNeedsRepointing = (int)$this->CtaLinkID > 0;
+        $this->repointDuplicatedLinkOwner();
+    }
+
+    /**
+     * Called by DataObject::write()
+     */
+    protected function onAfterWrite()
+    {
+        parent::onAfterWrite();
+
+        if ($this->linkOwnerNeedsRepointing) {
+            $this->repointDuplicatedLinkOwner();
+        }
+    }
+
+    /**
+     * Point the Link this element owns back at this element.
+     *
+     * Only ever runs on a record that was just created by duplicate(), so a Link row that a
+     * pre-existing duplicate still shares with its original is left alone - rewriting it on every
+     * save would just hand ownership of the shared row back and forth.
+     */
+    private function repointDuplicatedLinkOwner(): void
+    {
+        if (!$this->linkOwnerNeedsRepointing) {
+            return;
+        }
+
+        // An unwritten duplicate has no ID to hand to the Link yet - leave the flag set and retry
+        // from the write that eventually persists it.
+        if (!$this->isInDB() || (int)$this->CtaLinkID === 0) {
+            return;
+        }
+
+        $this->linkOwnerNeedsRepointing = false;
+        $link = $this->CtaLink();
+
+        if (!$link->exists() || (int)$link->OwnerID === (int)$this->ID) {
+            return;
+        }
+
+        $link->OwnerID = $this->ID;
+        $link->OwnerClass = $this->ClassName;
+        $link->OwnerRelation = 'CtaLink';
+        $link->write();
+    }
 
     /**
      * @return FieldList
